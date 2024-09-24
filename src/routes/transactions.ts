@@ -8,7 +8,7 @@ export const transactionsRouter:Router = Router();
 transactionsRouter.get("/book/:bookName", async (req, res) => {
   try {
     const bookName = req.params.bookName;
-
+  
     // Get all transactions for the book
     const transactions = await Transaction.find({ bookName });
 

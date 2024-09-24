@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
-
+import dotenv from 'dotenv';
+dotenv.config();
 // MongoDB connection
 // Main database connection
-const MAIN_MONGO_URI = 'mongodb+srv://paliwalarpit93:ri4X1OcH1iGfWI5o@cluster0.yalb5cm.mongodb.net/library';
+const MAIN_MONGO_URI = process.env.MAIN_MONGO_URI || '';
 const mainConnection = mongoose.createConnection(MAIN_MONGO_URI);
 
 // Transaction database connection
-const TRANSACTION_MONGO_URI = 'mongodb+srv://paliwalarpit93:ri4X1OcH1iGfWI5o@cluster0.yalb5cm.mongodb.net/transactions';
+const TRANSACTION_MONGO_URI = process.env.TRANSACTION_MONGO_URI || '';
 const transactionConnection = mongoose.createConnection(TRANSACTION_MONGO_URI);
 
 // Connect to both databases

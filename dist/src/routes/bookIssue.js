@@ -1,8 +1,20 @@
-import { Router } from "express";
-import { User } from "../db";
-import { Transaction, Book } from "../db";
-export const bookIssueRouter = Router();
-bookIssueRouter.put("/issue-book", async (req, res) => {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.bookIssueRouter = void 0;
+const express_1 = require("express");
+const db_1 = require("../db");
+const db_2 = require("../db");
+exports.bookIssueRouter = (0, express_1.Router)();
+exports.bookIssueRouter.put("/issue-book", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { bookName, userId, issueDate } = req.body;
         if (!bookName || !userId || !issueDate) {
@@ -10,24 +22,24 @@ bookIssueRouter.put("/issue-book", async (req, res) => {
         }
         const isAlphabetic = (input) => /^[A-Za-z]+$/.test(input);
         if (!isAlphabetic(userId)) {
-            const newTransaction = new Transaction({
+            const newTransaction = new db_2.Transaction({
                 userId,
                 bookName,
                 issueDate
             });
-            await newTransaction.save();
+            yield newTransaction.save();
             res.status(200).json({ message: "Book issued successfully", transaction: newTransaction });
         }
         else {
-            const user = await User.findById(userId);
+            const user = yield db_1.User.findById(userId);
             if (user) {
                 const searchedId = user._id.toString();
-                const newTransaction = new Transaction({
+                const newTransaction = new db_2.Transaction({
                     userId: searchedId,
                     bookName,
                     issueDate
                 });
-                await newTransaction.save();
+                yield newTransaction.save();
                 res.status(200).json({ message: "Book issued successfully", transaction: newTransaction });
             }
             else {
@@ -39,8 +51,8 @@ bookIssueRouter.put("/issue-book", async (req, res) => {
         console.error("Error issuing book:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-});
-bookIssueRouter.put("/return-book", async (req, res) => {
+}));
+exports.bookIssueRouter.put("/return-book", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId, bookName, returnDate } = req.body;
         if (!userId || !bookName || !returnDate) {
@@ -51,16 +63,16 @@ bookIssueRouter.put("/return-book", async (req, res) => {
         var transaction = null;
         // if number is numeric it is an id
         if (!isAlphabetic(userId)) {
-            transaction = await Transaction.findOne({
+            transaction = yield db_2.Transaction.findOne({
                 userId,
                 bookName
             });
         }
         else {
-            const user = await User.findById(userId);
+            const user = yield db_1.User.findById(userId);
             if (user) {
                 const searchedId = user._id.toString();
-                transaction = await Transaction.findOne({
+                transaction = yield db_2.Transaction.findOne({
                     bookName,
                     userId: searchedId
                 });
@@ -75,22 +87,22 @@ bookIssueRouter.put("/return-book", async (req, res) => {
         const issueDate = new Date(transaction.issueDate);
         const returnDateObj = new Date(returnDate);
         const daysRented = Math.ceil((returnDateObj.getTime() - issueDate.getTime()) / (1000 * 3600 * 24));
-        const rentPerDay = async () => {
+        const rentPerDay = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const book = await Book.findOne({ name: bookName });
+                const book = yield db_2.Book.findOne({ name: bookName });
                 return book ? book.rentPerDay : 1;
             }
             catch (error) {
                 console.log(error);
                 return 1;
             }
-        };
-        const rentPerDayValue = await rentPerDay();
+        });
+        const rentPerDayValue = yield rentPerDay();
         const totalRent = daysRented * rentPerDayValue;
         transaction.returnDate = returnDate;
         const status = "RETURNED";
         transaction.rentAmount = totalRent;
-        await transaction.save();
+        yield transaction.save();
         res.status(200).json({
             message: "Book returned successfully",
             status: status,
@@ -102,5 +114,5 @@ bookIssueRouter.put("/return-book", async (req, res) => {
         console.error("Error returning book:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-});
-module.exports = { bookIssueRouter };
+}));
+module.exports = { bookIssueRouter: exports.bookIssueRouter };

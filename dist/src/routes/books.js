@@ -1,13 +1,25 @@
-import { Router } from "express";
-import { Book } from "../db";
-export const bookRouter = Router();
-bookRouter.get("/search", async (req, res) => {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.bookRouter = void 0;
+const express_1 = require("express");
+const db_1 = require("../db");
+exports.bookRouter = (0, express_1.Router)();
+exports.bookRouter.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { searchTerm } = req.body;
         if (!searchTerm) {
             return res.status(400).json({ error: "Search term is required" });
         }
-        const books = await Book.find({ name: { $regex: searchTerm, $options: 'i' } });
+        const books = yield db_1.Book.find({ name: { $regex: searchTerm, $options: 'i' } });
         if (books.length === 0) {
             return res.status(404).json({ message: "No books found matching the search term" });
         }
@@ -16,14 +28,14 @@ bookRouter.get("/search", async (req, res) => {
     catch (error) {
         res.status(500).json({ error: "Error searching for books", details: error });
     }
-});
-bookRouter.get("/rent-range", async (req, res) => {
+}));
+exports.bookRouter.get("/rent-range", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { minRent, maxRent } = req.query;
         if (!minRent || !maxRent) {
             return res.status(400).json({ error: "Both minRent and maxRent are required" });
         }
-        const books = await Book.find({
+        const books = yield db_1.Book.find({
             rentPerDay: { $gte: Number(minRent), $lte: Number(maxRent) }
         });
         if (books.length === 0) {
@@ -34,16 +46,16 @@ bookRouter.get("/rent-range", async (req, res) => {
     catch (error) {
         res.status(500).json({ error: "Error searching for books by rent range", details: error });
     }
-});
-bookRouter.post("/add", async (req, res) => {
+}));
+exports.bookRouter.post("/add", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, category, rentPerDay } = req.body;
-    const book = new Book({ name, category, rentPerDay });
-    const savedBook = await book.save();
+    const book = new db_1.Book({ name, category, rentPerDay });
+    const savedBook = yield book.save();
     res.status(201).json(savedBook);
-});
-bookRouter.get("/get-all", async (req, res) => {
+}));
+exports.bookRouter.get("/get-all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const books = await Book.find();
+        const books = yield db_1.Book.find();
         if (books.length === 0) {
             return res.status(404).json({ message: "No books found" });
         }
@@ -52,8 +64,8 @@ bookRouter.get("/get-all", async (req, res) => {
     catch (error) {
         res.status(500).json({ error: "Error fetching books", details: error });
     }
-});
-bookRouter.get("/detail-search", async (req, res) => {
+}));
+exports.bookRouter.get("/detail-search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { category, term, minRent, maxRent } = req.query;
         if (!category || !term || !minRent || !maxRent) {
@@ -64,7 +76,7 @@ bookRouter.get("/detail-search", async (req, res) => {
             name: { $regex: term, $options: 'i' },
             rentPerDay: { $gte: Number(minRent), $lte: Number(maxRent) }
         };
-        const books = await Book.find(query);
+        const books = yield db_1.Book.find(query);
         if (books.length === 0) {
             return res.status(404).json({ message: "No books found matching the search criteria" });
         }
@@ -73,5 +85,5 @@ bookRouter.get("/detail-search", async (req, res) => {
     catch (error) {
         res.status(500).json({ error: "Error searching for books", details: error });
     }
-});
-module.exports = { bookRouter };
+}));
+module.exports = { bookRouter: exports.bookRouter };

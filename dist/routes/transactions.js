@@ -21,9 +21,9 @@ exports.transactionsRouter.get("/book/:bookName", (req, res) => __awaiter(void 0
         // Get all transactions for the book
         const transactions = yield db_2.Transaction.find({ bookName });
         // Calculate total count of people who issued the book
-        const totalIssuers = new Set(transactions.map(t => t.userId.toString())).size;
+        const totalIssuers = new Set(transactions.map((t) => t.userId.toString())).size;
         // Find the current issuer (if any)
-        const currentIssue = transactions.find(t => !t.returnDate);
+        const currentIssue = transactions.find((t) => !t.returnDate);
         let currentIssuer = null;
         let status = "Not issued at the moment";
         if (currentIssue) {
@@ -92,7 +92,7 @@ exports.transactionsRouter.get("/user-books/:userId", (req, res) => __awaiter(vo
             returnDate: null // Assuming null returnDate means the book is still issued
         }).populate('bookName'); // Populate the book details
         // Extract book information from transactions
-        const issuedBooks = transactions.map(transaction => ({
+        const issuedBooks = transactions.map((transaction) => ({
             bookName: transaction.bookName,
             issueDate: transaction.issueDate
         }));
@@ -131,7 +131,7 @@ exports.transactionsRouter.get("/issued-books", (req, res) => __awaiter(void 0, 
             model: db_1.User
         }).populate('bookName');
         // Extract book and user information from transactions
-        const issuedBooks = transactions.map(transaction => ({
+        const issuedBooks = transactions.map((transaction) => ({
             bookName: transaction.bookName,
             userId: transaction.userId,
         }));

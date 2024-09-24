@@ -1,6 +1,7 @@
-import app from '../src/app';
-const handler = (req, res) => {
-    res.status(200).json({ message: 'Hello from the API!' });
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-export { handler };
-export default app;
+Object.defineProperty(exports, "__esModule", { value: true });
+const app_1 = __importDefault(require("../src/app"));
+exports.default = app_1.default;

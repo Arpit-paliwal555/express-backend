@@ -47,13 +47,13 @@ exports.bookRouter.get("/rent-range", (req, res) => __awaiter(void 0, void 0, vo
         res.status(500).json({ error: "Error searching for books by rent range", details: error });
     }
 }));
-exports.bookRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.bookRouter.post("/add", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, category, rentPerDay } = req.body;
     const book = new db_1.Book({ name, category, rentPerDay });
     const savedBook = yield book.save();
     res.status(201).json(savedBook);
 }));
-exports.bookRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.bookRouter.get("/get-all", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const books = yield db_1.Book.find();
         if (books.length === 0) {

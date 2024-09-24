@@ -57,7 +57,8 @@ bookIssueRouter.put("/return-book", async (req, res) => {
     if(!isAlphabetic(userId)){
         transaction = await Transaction.findOne({
             userId,
-            bookName            
+            bookName,
+            returnDate : null       
         });
     }else{
         const user = await User.findById(userId);
@@ -65,7 +66,8 @@ bookIssueRouter.put("/return-book", async (req, res) => {
             const searchedId:string = user._id.toString();
             transaction = await Transaction.findOne({
                 bookName,
-                userId:searchedId
+                userId:searchedId,
+                returnDate : null
             });
         }else{
            return res.status(404).json({ error: "User with given name not found" });

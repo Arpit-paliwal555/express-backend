@@ -65,7 +65,8 @@ exports.bookIssueRouter.put("/return-book", (req, res) => __awaiter(void 0, void
         if (!isAlphabetic(userId)) {
             transaction = yield db_2.Transaction.findOne({
                 userId,
-                bookName
+                bookName,
+                returnDate: null
             });
         }
         else {
@@ -74,7 +75,8 @@ exports.bookIssueRouter.put("/return-book", (req, res) => __awaiter(void 0, void
                 const searchedId = user._id.toString();
                 transaction = yield db_2.Transaction.findOne({
                     bookName,
-                    userId: searchedId
+                    userId: searchedId,
+                    returnDate: null
                 });
             }
             else {
