@@ -109,9 +109,9 @@ transactionsRouter.get("/user-books/:userId", async (req, res) => {
 });
 
 // Get all books issued and the user ids in the date ranges
-transactionsRouter.get("/issued-books", async (req, res) => {
+transactionsRouter.get("/issued-books/:startDate/:endDate", async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
+    const { startDate, endDate } = req.params;
 
     if (!startDate || !endDate || typeof startDate !== 'string' || typeof endDate !== 'string') {
       return res.status(400).json({ error: "Start date and end date are required and must be strings" });

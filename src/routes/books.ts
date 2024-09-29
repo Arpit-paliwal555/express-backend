@@ -3,9 +3,9 @@ import { Book } from "../db";
 export const bookRouter:Router = Router();
 
 
-bookRouter.get("/search", async (req, res) => {
+bookRouter.get("/search/:searchTerm", async (req, res) => {
         try {
-            const { searchTerm } = req.body;
+            const searchTerm  = req.params.searchTerm;
             if (!searchTerm) {
                 return res.status(400).json({ error: "Search term is required" });
             }
@@ -18,10 +18,9 @@ bookRouter.get("/search", async (req, res) => {
             res.status(500).json({ error: "Error searching for books", details: error });
         }
 });
-
-bookRouter.get("/rent-range", async (req, res) => {
+bookRouter.get("/rent-range/:minRent/:maxRent", async (req, res) => {
     try {
-        const { minRent, maxRent } = req.query;
+        const { minRent, maxRent } = req.params;
         if (!minRent || !maxRent) {
             return res.status(400).json({ error: "Both minRent and maxRent are required" });
         }
@@ -57,9 +56,9 @@ bookRouter.get("/get-all", async (req, res) => {
     }
 });
 
-bookRouter.get("/detail-search", async (req, res) => {
+bookRouter.get("/detail-search/:category/:term/:minRent/:maxRent", async (req, res) => {
     try {
-        const { category, term, minRent, maxRent } = req.query;
+        const { category, term, minRent, maxRent } = req.params;
 
         if (!category || !term || !minRent || !maxRent) {
             return res.status(400).json({ error: "Category, search term, minRent, and maxRent are required" });

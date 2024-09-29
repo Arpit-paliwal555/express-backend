@@ -13,9 +13,9 @@ exports.bookRouter = void 0;
 const express_1 = require("express");
 const db_1 = require("../db");
 exports.bookRouter = (0, express_1.Router)();
-exports.bookRouter.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.bookRouter.get("/search/:searchTerm", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { searchTerm } = req.body;
+        const searchTerm = req.params.searchTerm;
         if (!searchTerm) {
             return res.status(400).json({ error: "Search term is required" });
         }
@@ -29,9 +29,9 @@ exports.bookRouter.get("/search", (req, res) => __awaiter(void 0, void 0, void 0
         res.status(500).json({ error: "Error searching for books", details: error });
     }
 }));
-exports.bookRouter.get("/rent-range", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.bookRouter.get("/rent-range/:minRent/:maxRent", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { minRent, maxRent } = req.query;
+        const { minRent, maxRent } = req.params;
         if (!minRent || !maxRent) {
             return res.status(400).json({ error: "Both minRent and maxRent are required" });
         }
@@ -65,9 +65,9 @@ exports.bookRouter.get("/get-all", (req, res) => __awaiter(void 0, void 0, void 
         res.status(500).json({ error: "Error fetching books", details: error });
     }
 }));
-exports.bookRouter.get("/detail-search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.bookRouter.get("/detail-search/:category/:term/:minRent/:maxRent", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { category, term, minRent, maxRent } = req.query;
+        const { category, term, minRent, maxRent } = req.params;
         if (!category || !term || !minRent || !maxRent) {
             return res.status(400).json({ error: "Category, search term, minRent, and maxRent are required" });
         }
